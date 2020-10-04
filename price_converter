@@ -4,16 +4,23 @@
 // @version      0.1
 // @description  as the price page on AWS EC2 are only hours based, give an monthly price conversion automatically using this tampermonkey script
 // @author       houxiong
-// @match        https://aws.amazon.com/ec2/pricing/*
+// @match        https://aws.amazon.com/ec2/*pricing/*
+// @exclude      https://aws.amazon.com/ec2/dedicated-hosts/pricing/
+// @exclude      https://aws.amazon.com/ec2/pricing/
+// @exclude      https://aws.amazon.com/ec2/pricing/reserved-instances/*
 // @grant        none
 // ==/UserScript==
-var DEBUG = true;
-
 var HOURS_IN_ONE_MONTH = 720;
 var DECIMAL_TO_DISPLAY = 2;
 
 var CURRENCY = "\$";
 
+//setTimeout(window.onload, 15000);
+
+setTimeout( function () {
+  window.alert("Loading the monthly price, it might take up to 30 seconds to finish loading on the page!");
+  $("a:contains('load more comments')").click();
+}, 1000);
 
 window.onload = setInterval ( function ()
 {
@@ -54,4 +61,4 @@ window.onload = setInterval ( function ()
     }
 }
 }
-,30000)
+,5000)
