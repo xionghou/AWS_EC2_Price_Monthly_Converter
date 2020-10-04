@@ -2,7 +2,7 @@
 // @name         AWS price converter to Monthly cost
 // @namespace    http://github.com/
 // @version      0.1
-// @description  github 
+// @description  as the price page on AWS EC2 are only hours based, give an monthly price conversion automatically using this tampermonkey script
 // @author       houxiong
 // @match        https://aws.amazon.com/ec2/pricing/*
 // @grant        none
