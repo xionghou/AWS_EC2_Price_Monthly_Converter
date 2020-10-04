@@ -1,0 +1,57 @@
+// ==UserScript==
+// @name         AWS Hourly to Monthly price converter tester
+// @namespace    http://github.com/
+// @version      0.1
+// @description  github 
+// @author       houxiong
+// @match        https://aws.amazon.com/ec2/pricing/*
+// @grant        none
+// ==/UserScript==
+var DEBUG = true;
+
+var HOURS_IN_ONE_MONTH = 720;
+var DECIMAL_TO_DISPLAY = 2;
+
+var CURRENCY = "\$";
+
+
+window.onload = setInterval ( function ()
+{
+    console.log("INFO: Document loaded!");
+    var rates = [];
+
+     var rate = document.getElementsByTagName('td');
+//   console.log(rate)
+//    console.log("INFO: "+" has "+ rate.length + " elements");
+    for(var j = 0; j < rate.length; j++)
+    {
+        var element = rate[j];
+//        console.log(element)
+        rates.push(element);
+    }
+
+
+//    console.log('INFO: Found:'+ rates.length + ' price');
+
+    for(var k = 0; k < rates.length; k++)
+    {
+//        var content = rates[k].innerHTML;
+        var content = rates[k].innerText;
+//        console.log(content)
+        var match = content.search("per Hour")
+        var match_month = content.search("per Month")
+//        console.log(match)
+//        console.log(match_month)
+        if(match != -1 && match_month == -1)
+        {
+            var pph = content;
+            pph = pph.replace(CURRENCY, "");
+            pph = pph.replace(" per Hour", "");
+
+            var ppm = (pph * HOURS_IN_ONE_MONTH).toFixed(DECIMAL_TO_DISPLAY);
+
+            rates[k].innerHTML = content + '</br>$' + ppm + ' per Month';
+    }
+}
+}
+,30000)
