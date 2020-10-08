@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  as the price page on AWS EC2 are only hours based, give an monthly price conversion automatically using this tampermonkey script
 // @author       houxiong
-// @match        https://aws.amazon.com/ec2/*pricing/*
+// @match        https://aws.amazon.com/*ec2/*pricing/*
 // @exclude      https://aws.amazon.com/ec2/dedicated-hosts/pricing/
 // @exclude      https://aws.amazon.com/ec2/pricing/
 // @exclude      https://aws.amazon.com/ec2/pricing/reserved-instances/*
@@ -13,9 +13,9 @@
 var HOURS_IN_ONE_MONTH = 720;
 var DECIMAL_TO_DISPLAY = 2;
 
+var PRICE_NON_AVAILABLE = "N/A";
 var CURRENCY = "\$";
 
-//setTimeout(window.onload, 15000);
 
 setTimeout( function () {
   window.alert("Loading the monthly price, it might take up to 30 seconds to finish loading on the page!");
@@ -47,8 +47,10 @@ window.onload = setInterval ( function ()
 //        console.log(content)
         var match = content.search("per Hour")
         var match_month = content.search("per Month")
-//        console.log(match)
-//        console.log(match_month)
+        var chinese_match = content.search("每小时")
+        var chinese_match_month = content.search("每月")
+        console.log(chinese_match)
+        console.log(chinese_match_month)
         if(match != -1 && match_month == -1)
         {
             var pph = content;
@@ -58,7 +60,19 @@ window.onload = setInterval ( function ()
             var ppm = (pph * HOURS_IN_ONE_MONTH).toFixed(DECIMAL_TO_DISPLAY);
 
             rates[k].innerHTML = content + '</br>$' + ppm + ' per Month';
-    }
+        }
+        if(chinese_match != -1 && chinese_match_month == -1)
+        {
+            var ppc = content;
+            ppc = ppc.replace("每小时 ", "");
+            ppc = ppc.replace(" USD", "");
+
+            var ppd = (ppc * HOURS_IN_ONE_MONTH).toFixed(DECIMAL_TO_DISPLAY);
+
+            rates[k].innerHTML = content + '</br>' + "每月 " + ppd + ' USD';
+        }
 }
 }
 ,5000)
+
+
